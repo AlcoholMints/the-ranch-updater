@@ -7,6 +7,10 @@ name = "pypi"
 requests = "*"
 flask = "*"
 python-dotenv = "*"
+pandas = "*"
+beautifulsoup4 = "*"
+lxml = "*"
+spotipy = "*"
 
 [dev-packages]
 

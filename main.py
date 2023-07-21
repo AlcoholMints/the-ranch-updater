@@ -1,22 +1,20 @@
-# See the GPT script from 7/20. I need to ask the following:
-# 2. How can I use the Spotify API to get teh URI of a song
-    # Really, this can come later. I should get the song to add first.
-# 3. What is a redirect URI and what should I use?
-    # What should I use if I were running this on Heroku?
-# 4. What are scopes and where can I find a list of them?
+# Outstanding questions
+# How can I use the Spotify API to get teh URI of a song
+# What redirect uri should I use if I were running this on Heroku?
+# What are scopes and where can I find a list of them?
     # Again, I can ask this later.
 
-# Left off with: I cant get the redirect uri to load
-
+# import libraries
 import requests
 import os
 from dotenv import load_dotenv
 
+#
 def get_access_token():
-    # Replace with your Spotify API credentials
+    # Define all of the clint IDs
     CLIENT_ID = os.getenv('CLIENT_ID')
     CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-    REDIRECT_URI = "http://localhost/"  # Replace with your redirect URI
+    REDIRECT_URI = "http://localhost/"  # may need to replace for heroku. this needs to be updated in spotify as well.
     SCOPES = "playlist-modify-public"  # Required scope for modifying a public playlist
 
     # Check if a refresh token is already available
