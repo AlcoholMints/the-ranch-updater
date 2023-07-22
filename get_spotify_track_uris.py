@@ -27,7 +27,7 @@ def data_grabber():
         song_list.append(title)
     return song_list
 
-def get_spotify_track_id():
+def get_spotify_track_uris():
     # Get the song list and the access token
     song_list = data_grabber()
     access_token = get_access_token()
@@ -36,6 +36,7 @@ def get_spotify_track_id():
     headers = {'Authorization': f'Bearer {access_token}'}
 
     track_ids = []
+    spotify_track_uris = []
     for song_artist in song_list:
         # Split the song_artist string into artist and song parts
         artist_song = song_artist.split(' - ')
@@ -66,9 +67,9 @@ def get_spotify_track_id():
                 print(f"Track not found for: {query}")
         else:
             print(f"Error fetching data for: {query}")
-            
-    print(track_ids)
-    return track_ids
+
+    spotify_track_uris = ['spotify:track:' + track_id for track_id in track_ids]
+    return spotify_track_uris
 
 if __name__ == '__main__':
-    get_spotify_track_id()
+    get_spotify_track_uris()
