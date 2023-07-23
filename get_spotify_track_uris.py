@@ -11,7 +11,7 @@ from tokens import get_access_token
 # goes to online radio box and gets the artists and tracks from 95.9
 def data_grabber():
     # Create a URL object
-    url = 'https://onlineradiobox.com/us/kfwr/playlist/?cs=us.kfwr'
+    url = 'https://onlineradiobox.com/us/kfwr/playlist/1?cs=us.kfwr'
 
     # Create object page
     page = requests.get(url)
@@ -82,7 +82,6 @@ def convert_to_spotify_track_uris():
     spotify_track_uris_with_duplicates = ['spotify:track:' + track_id for track_id in track_ids]
 
     spotify_track_uris = remove_internal_duplicates(spotify_track_uris_with_duplicates)
-
     return spotify_track_uris
 
 # function that makes the list into a new list comprised of several sublists of size 100 or less
@@ -90,4 +89,4 @@ def chunkify(list):
     return [list[i:i + 100] for i in range(0, len(list), 100)]
 
 if __name__ == '__main__':
-    chunkify()
+    convert_to_spotify_track_uris()
