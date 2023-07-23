@@ -29,7 +29,7 @@ def data_grabber():
     return song_list
 
 # Goes to spotify and gets the track uris
-def get_spotify_track_uris():
+def convert_to_spotify_track_uris():
     # Get the song list and the access token
     song_list = data_grabber()
     access_token = get_access_token()
@@ -68,14 +68,15 @@ def get_spotify_track_uris():
             else:
                 print(f"Track not found for: {query}")
         else:
+            print("Response status code:", response.status_code)
+            print("Response content:", response.json())
             print(f"Error fetching data for: {query}")
 
     spotify_track_uris = ['spotify:track:' + track_id for track_id in track_ids]
     return spotify_track_uris
 
 # function that makes the list into a new list comprised of several sublists of size 100 or less
-def chunkify():
-    list = get_spotify_track_uris()
+def chunkify(list):
     return [list[i:i + 100] for i in range(0, len(list), 100)]
 
 if __name__ == '__main__':

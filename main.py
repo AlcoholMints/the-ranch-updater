@@ -5,7 +5,9 @@
 import requests
 import os
 from tokens import get_access_token
-from get_spotify_track_uris import get_spotify_track_uris
+from get_spotify_track_uris import convert_to_spotify_track_uris, chunkify
+from playlist_cleaner import playlist_cleaner
+
 
 def add_songs_to_playlist(access_token, playlist_id, track_uris):
     headers = {
@@ -26,11 +28,15 @@ def add_songs_to_playlist(access_token, playlist_id, track_uris):
 
 def main():
     access_token = get_access_token()
-    if access_token:
-        playlist_id = os.getenv('YOUR_PLAYLIST_ID') 
-        spotify_track_uris = get_spotify_track_uris()
-    for chunk in spotify_track_uris:
-        add_songs_to_playlist(access_token, playlist_id, chunk)
+    playlist_id = os.getenv('YOUR_PLAYLIST_ID') 
+    spotify_track_uris = convert_to_spotify_track_uris()
+    playlist_cleaner() # deletes duplicates and old songs on exisiting playlist
+    if len(spotify_track_uris) > 100:
+        chunkify(spotify_track_uris)
+        for chunk in spotify_track_uris:
+            add_songs_to_playlist(access_token, playlist_id, chunk)
+    else:
+        add_songs_to_playlist(access_token, playlist_id, spotify_track_uris)
 
 if __name__ == "__main__":
     main()
