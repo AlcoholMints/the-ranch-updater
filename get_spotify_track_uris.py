@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from tokens import get_access_token
 
+# goes to online radio box and gets the artists and tracks from 95.9
 def data_grabber():
     # Create a URL object
     url = 'https://onlineradiobox.com/us/kfwr/playlist/?cs=us.kfwr'
@@ -27,11 +28,7 @@ def data_grabber():
         song_list.append(title)
     return song_list
 
-# function that makes the list into a new list comprised of several sublists of size 100 or less
-def chunkify(list):
-    return [list[i:i + 100] for i in range(0, len(list), 100)]
-    
-
+# Goes to spotify and gets the track uris
 def get_spotify_track_uris():
     # Get the song list and the access token
     song_list = data_grabber()
@@ -73,8 +70,13 @@ def get_spotify_track_uris():
         else:
             print(f"Error fetching data for: {query}")
 
-    spotify_track_uris = chunkify(['spotify:track:' + track_id for track_id in track_ids])
+    spotify_track_uris = ['spotify:track:' + track_id for track_id in track_ids]
     return spotify_track_uris
 
+# function that makes the list into a new list comprised of several sublists of size 100 or less
+def chunkify():
+    list = get_spotify_track_uris()
+    return [list[i:i + 100] for i in range(0, len(list), 100)]
+
 if __name__ == '__main__':
-    get_spotify_track_uris()
+    chunkify()

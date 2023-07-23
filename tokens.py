@@ -11,7 +11,7 @@ def get_access_token():
     # Define all of the clint IDs
     CLIENT_ID = os.getenv('CLIENT_ID')
     CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-    REDIRECT_URI = "http://localhost/"  # may need to replace for heroku. this needs to be updated in spotify as well.
+    REDIRECT_URI = os.getenv('REDIRECT_URI') # may need to replace for heroku. this needs to be updated in spotify as well.
     SCOPES = "playlist-modify-public"  # Required scope for modifying a public playlist
 
     # Check if a refresh token is already available
