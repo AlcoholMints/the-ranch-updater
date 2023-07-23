@@ -11,6 +11,7 @@ pandas = "*"
 beautifulsoup4 = "*"
 lxml = "*"
 spotipy = "*"
+datetime = "*"
 
 [dev-packages]
 

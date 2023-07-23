@@ -28,6 +28,13 @@ def data_grabber():
         song_list.append(title)
     return song_list
 
+# for removing duplicates from 95.9 data. used in next function
+def remove_internal_duplicates(list):
+    # Use a dict to keep track of unique items while preserving order
+    seen = {}
+    return [seen.setdefault(x, x) for x in list if x not in seen]
+
+
 # Goes to spotify and gets the track uris
 def convert_to_spotify_track_uris():
     # Get the song list and the access token
@@ -72,7 +79,10 @@ def convert_to_spotify_track_uris():
             print("Response content:", response.json())
             print(f"Error fetching data for: {query}")
 
-    spotify_track_uris = ['spotify:track:' + track_id for track_id in track_ids]
+    spotify_track_uris_with_duplicates = ['spotify:track:' + track_id for track_id in track_ids]
+
+    spotify_track_uris = remove_internal_duplicates(spotify_track_uris_with_duplicates)
+
     return spotify_track_uris
 
 # function that makes the list into a new list comprised of several sublists of size 100 or less

@@ -32,7 +32,7 @@ def main():
     spotify_track_uris = convert_to_spotify_track_uris()
     playlist_cleaner() # deletes duplicates and old songs on exisiting playlist
     if len(spotify_track_uris) > 100:
-        chunkify(spotify_track_uris)
+        spotify_track_uris = chunkify(spotify_track_uris)
         for chunk in spotify_track_uris:
             add_songs_to_playlist(access_token, playlist_id, chunk)
     else:
