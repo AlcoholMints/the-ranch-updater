@@ -1,9 +1,5 @@
-# Outstanding questions
-# How can I use the Spotify API to get teh URI of a song
-# What redirect uri should I use if I were running this on Heroku?
-# What are scopes and where can I find a list of them?
-    # Again, I can ask this later.
-# ! Need to split the list into 100 track chunks and make a presonse for each chunk. See lastest GPT prompt
+
+# ? What redirect uri should I use if I were running this on Heroku?
 
 # import libraries
 import requests
@@ -20,13 +16,12 @@ def add_songs_to_playlist(access_token, playlist_id, track_uris):
         "uris": track_uris,
     }
     endpoint = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
-    print("Request data:", data)
     response = requests.post(endpoint, headers=headers, json=data)
-    print("Response status code:", response.status_code)
-    print("Response content:", response.json())
     if response.status_code == 201:
         print("Songs added to the playlist successfully!")
     else:
+        print("Response status code:", response.status_code)
+        print("Response content:", response.json())
         print("Failed to add the songs to the playlist.")
 
 def main():
@@ -34,7 +29,8 @@ def main():
     if access_token:
         playlist_id = os.getenv('YOUR_PLAYLIST_ID') 
         spotify_track_uris = get_spotify_track_uris()
-    add_songs_to_playlist(access_token, playlist_id, spotify_track_uris)
+    for chunk in spotify_track_uris:
+        add_songs_to_playlist(access_token, playlist_id, chunk)
 
 if __name__ == "__main__":
     main()

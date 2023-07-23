@@ -27,6 +27,11 @@ def data_grabber():
         song_list.append(title)
     return song_list
 
+# function that makes the list into a new list comprised of several sublists of size 100 or less
+def chunkify(list):
+    return [list[i:i + 100] for i in range(0, len(list), 100)]
+    
+
 def get_spotify_track_uris():
     # Get the song list and the access token
     song_list = data_grabber()
@@ -68,7 +73,7 @@ def get_spotify_track_uris():
         else:
             print(f"Error fetching data for: {query}")
 
-    spotify_track_uris = ['spotify:track:' + track_id for track_id in track_ids]
+    spotify_track_uris = chunkify(['spotify:track:' + track_id for track_id in track_ids])
     return spotify_track_uris
 
 if __name__ == '__main__':
