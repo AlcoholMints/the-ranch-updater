@@ -8,6 +8,17 @@ from tokens import get_access_token
 from get_spotify_track_uris import convert_to_spotify_track_uris, chunkify
 from playlist_cleaner import playlist_cleaner
 
+def lambda_handler(event,context):
+    access_token = get_access_token()
+    playlist_id = os.getenv('YOUR_PLAYLIST_ID') 
+    spotify_track_uris = convert_to_spotify_track_uris()
+    playlist_cleaner() # deletes duplicates and old songs on exisiting playlist
+    if len(spotify_track_uris) > 100:
+        spotify_track_uris = chunkify(spotify_track_uris)
+        for chunk in spotify_track_uris:
+            add_songs_to_playlist(access_token, playlist_id, chunk)
+    else:
+        add_songs_to_playlist(access_token, playlist_id, spotify_track_uris)
 
 def add_songs_to_playlist(access_token, playlist_id, track_uris):
     headers = {
@@ -25,18 +36,3 @@ def add_songs_to_playlist(access_token, playlist_id, track_uris):
         print("Response status code:", response.status_code)
         print("Response content:", response.json())
         print("Failed to add the songs to the playlist.")
-
-def main():
-    access_token = get_access_token()
-    playlist_id = os.getenv('YOUR_PLAYLIST_ID') 
-    spotify_track_uris = convert_to_spotify_track_uris()
-    playlist_cleaner() # deletes duplicates and old songs on exisiting playlist
-    if len(spotify_track_uris) > 100:
-        spotify_track_uris = chunkify(spotify_track_uris)
-        for chunk in spotify_track_uris:
-            add_songs_to_playlist(access_token, playlist_id, chunk)
-    else:
-        add_songs_to_playlist(access_token, playlist_id, spotify_track_uris)
-
-if __name__ == "__main__":
-    main()

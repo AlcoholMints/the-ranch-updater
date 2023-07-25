@@ -5,7 +5,6 @@
 # import libraries
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 from tokens import get_access_token
 
 # goes to online radio box and gets the artists and tracks from 95.9
