@@ -1,38 +1,43 @@
 
-# ? What redirect uri should I use if I were running this on Heroku?
-
 # import libraries
 import requests
 import os
-from tokens import get_access_token
 from get_spotify_track_uris import convert_to_spotify_track_uris, chunkify
 from playlist_cleaner import playlist_cleaner
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 
-def lambda_handler(event,context):
-    access_token = get_access_token()
-    playlist_id = os.getenv('YOUR_PLAYLIST_ID') 
+def lambda_handler():
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+    scope = "playlist-modify-public",
+    client_id = os.getenv('CLIENT_ID'),
+    client_secret = os.getenv('CLIENT_SECRET'),
+    redirect_uri = os.getenv('REDIRECT_URI'),
+    ))
+    playlist_id = os.getenv('YOUR_PLAYLIST_ID')
     spotify_track_uris = convert_to_spotify_track_uris()
-    playlist_cleaner() # deletes duplicates and old songs on exisiting playlist
+    playlist_cleaner()  # deletes duplicates and old songs on existing playlist
+
     if len(spotify_track_uris) > 100:
         spotify_track_uris = chunkify(spotify_track_uris)
         for chunk in spotify_track_uris:
-            add_songs_to_playlist(access_token, playlist_id, chunk)
+            add_songs_to_playlist(playlist_id, chunk)
     else:
-        add_songs_to_playlist(access_token, playlist_id, spotify_track_uris)
+        add_songs_to_playlist(playlist_id, spotify_track_uris)
 
-def add_songs_to_playlist(access_token, playlist_id, track_uris):
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-        "Content-Type": "application/json",
-    }
-    data = {
-        "uris": track_uris,
-    }
-    endpoint = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
-    response = requests.post(endpoint, headers=headers, json=data)
-    if response.status_code == 201:
+def add_songs_to_playlist(playlist_id, track_uris):
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+    scope = "playlist-modify-public",
+    client_id = os.getenv('CLIENT_ID'),
+    client_secret = os.getenv('CLIENT_SECRET'),
+    redirect_uri = os.getenv('REDIRECT_URI'),
+    ))
+    results = sp.playlist_add_items(playlist_id, track_uris)
+    
+    if 'snapshot_id' in results:
         print("Songs added to the playlist successfully!")
     else:
-        print("Response status code:", response.status_code)
-        print("Response content:", response.json())
         print("Failed to add the songs to the playlist.")
+
+if __name__ == "__main__":
+    lambda_handler()

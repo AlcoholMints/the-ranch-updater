@@ -5,10 +5,8 @@ name = "pypi"
 
 [packages]
 requests = "*"
-flask = "*"
 python-dotenv = "*"
 beautifulsoup4 = "*"
-lxml = "*"
 datetime = "*"
 
 [dev-packages]
