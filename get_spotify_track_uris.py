@@ -1,15 +1,5 @@
 # datagrabber function
 # * Function that grabs all the song and artists played on 95.9 that day in a list
-# ! This funtion deletes all but 100 songs. I think it's something to do with playlist cleaner's setup
-# ! This funtion deletes all but 100 songs. I think it's something to do with playlist cleaner's setup
-# ! This funtion deletes all but 100 songs. I think it's something to do with playlist cleaner's setup
-# ! This funtion deletes all but 100 songs. I think it's something to do with playlist cleaner's setup
-# ! This funtion deletes all but 100 songs. I think it's something to do with playlist cleaner's setup
-# ! This funtion deletes all but 100 songs. I think it's something to do with playlist cleaner's setup
-# ! This funtion deletes all but 100 songs. I think it's something to do with playlist cleaner's setup
-# ! This funtion deletes all but 100 songs. I think it's something to do with playlist cleaner's setup
-
-
 # import libraries
 import requests
 import os
@@ -22,30 +12,24 @@ load_dotenv()
 
 # goes to online radio box and gets the artists and tracks from 95.9
 def data_grabber():
-    # Create a URL object
-    url = f'https://onlineradiobox.com/us/kfwr/playlist/1?cs=us.kfwr'
-
-    # Create object page
-    page = requests.get(url)
-
-    # parser-lxml - Change html to a Python friendly format
-    # obtain the page's information
-    soup = BeautifulSoup(page.text, 'html5lib')
-    # grab the table on the front, the songs played that day
-    song_table = soup.find('table')
-    # pull all "a" from the table and put into another list of songs
     song_list = []
-    for i in song_table.find_all('a'):
-        title = i.text
-        song_list.append(title)
+    for day in range(1,7):
+        # Create a URL object
+        url = f'https://onlineradiobox.com/us/kfwr/playlist/{day}?cs=us.kfwr'
+
+        # Create object page
+        page = requests.get(url)
+
+        # parser-lxml - Change html to a Python friendly format
+        # obtain the page's information
+        soup = BeautifulSoup(page.text, 'html5lib')
+        # grab the table on the front, the songs played that day
+        song_table = soup.find('table')
+        # pull all "a" from the table and put into another list of songs
+        for i in song_table.find_all('a'):
+            title = i.text
+            song_list.append(title)
     return song_list
-
-# for removing duplicates from 95.9 data. used in next function
-def remove_internal_duplicates(list):
-    # Use a dict to keep track of unique items while preserving order
-    seen = {}
-    return [seen.setdefault(x, x) for x in list if x not in seen]
-
 
 # Goes to spotify and gets the track uris
 def convert_to_spotify_track_uris():
@@ -88,6 +72,12 @@ def convert_to_spotify_track_uris():
 # function that makes the list into a new list comprised of several sublists of size 100 or less
 def chunkify(list):
     return [list[i:i + 100] for i in range(0, len(list), 100)]
+
+# for removing duplicates from 95.9 data. used in next function
+def remove_internal_duplicates(list):
+    # Use a dict to keep track of unique items while preserving order
+    seen = {}
+    return [seen.setdefault(x, x) for x in list if x not in seen]
 
 if __name__ == "__main__":
     convert_to_spotify_track_uris()
